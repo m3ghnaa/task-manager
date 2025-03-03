@@ -19,9 +19,7 @@ mongoose.connect(process.env.MONGO_URI, {
 }).then(() => console.log("MongoDB Connected"))
   .catch(err => console.log(err));
 
-  app.use(express.static(path.join(__dirname, "public")));
-
-
+app.use(express.static(path.join(__dirname, "../public")));
 
 // Task Schema
 const TaskSchema = new mongoose.Schema({
@@ -32,7 +30,8 @@ const TaskSchema = new mongoose.Schema({
 const Task = mongoose.model('Task', TaskSchema);
 
 
-app.set("views", path.join(__dirname, "views"));
+app.set("views", path.join(__dirname, "../views"));
+
 app.set("view engine", "ejs");
 
 // Middleware
