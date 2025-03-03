@@ -6,6 +6,7 @@ const methodOverride = require("method-override");
 const cookieParser = require("cookie-parser");
 const authMiddleware = require("./middleware/auth");
 
+
 const port = 5000;
 const app = express();
 
@@ -29,20 +30,28 @@ app.set('view engine', 'ejs');
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser()); 
 app.use(methodOverride('_method'));
+app.use(require("./middleware/decodeUserMiddleware"));
 
+app.use((req, res, next) => {
+    res.locals.user = req.user || null; // If user is logged in, set it; otherwise, set it to null
+    next();
+});
+
+app.use(express.static("public"));
 // Routes
 const authRoutes = require("./routes/auth");
 app.use("/auth", authRoutes);
 
 app.get("/", (req, res) => {
-    res.redirect("/auth/login");
+    res.render("index");
 });
+
 app.use("/tasks", authMiddleware);
 
 // Show all tasks
 app.get('/tasks', async (req, res) => {
     const tasks = await Task.find().sort({ dueDate: 1 });
-    res.render('index', { tasks });
+    res.render('tasks', { tasks });
 });
 
 // Show form to add task
