@@ -5,6 +5,8 @@ const bodyParser = require("body-parser");
 const methodOverride = require("method-override");
 const cookieParser = require("cookie-parser");
 const authMiddleware = require("./middleware/auth");
+const path = require("path");
+
 
 
 const port = 5000;
