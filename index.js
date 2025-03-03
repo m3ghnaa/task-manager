@@ -26,7 +26,8 @@ const TaskSchema = new mongoose.Schema({
 const Task = mongoose.model('Task', TaskSchema);
 
 // Middleware
-app.set('view engine', 'ejs');
+app.set("views", path.join(__dirname, "views"));
+app.set("view engine", "ejs");
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser()); 
 app.use(methodOverride('_method'));
