@@ -27,9 +27,12 @@ const TaskSchema = new mongoose.Schema({
 });
 const Task = mongoose.model('Task', TaskSchema);
 
-// Middleware
+app.use(express.static(path.join(__dirname, "public")));
+
 app.set("views", path.join(__dirname, "views"));
 app.set("view engine", "ejs");
+
+// Middleware
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser()); 
 app.use(methodOverride('_method'));
@@ -40,7 +43,6 @@ app.use((req, res, next) => {
     next();
 });
 
-app.use(express.static("public"));
 // Routes
 const authRoutes = require("./routes/auth");
 app.use("/auth", authRoutes);
