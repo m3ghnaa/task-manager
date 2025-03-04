@@ -5,6 +5,7 @@ const bodyParser = require("body-parser");
 const methodOverride = require("method-override");
 const cookieParser = require("cookie-parser");
 const path = require("path");
+const User = require("./models/User"); 
 
 const decodeUserMiddleware = require("./middleware/decodeUserMiddleware");
 
@@ -64,9 +65,27 @@ app.use("/tasks", (req, res, next) => {
 
 
 app.get("/tasks", async (req, res) => {
-    const tasks = await Task.find({ user: req.user.userId }).sort({ dueDate: 1 });
-    console.log("Fetched Tasks for User:", req.user.userId, tasks);
-    res.render("tasks", { tasks });
+    if (!req.user) return res.redirect("/auth/login");
+    
+    try {
+        // Get user from database using the ID from JWT
+        const user = await User.findById(req.user.userId);
+        
+        if (!user) {
+            res.clearCookie("token");
+            return res.redirect("/auth/login");
+        }
+
+        const tasks = await Task.find({ user: user._id }).sort({ dueDate: 1 });
+        res.render("tasks", { 
+            tasks,
+            username: user.username 
+        });
+        
+    } catch (error) {
+        console.error("❌ Error fetching tasks:", error);
+        res.status(500).send("Server error");
+    }
 });
 
 
