@@ -18,11 +18,25 @@ router.post("/signup", async (req, res) => {
         if (existingUser) {
             return res.render("signup", { error: "Username or Email already exists!" });
         }
-        const trimmedPassword = password.trim();
-        const newUser = new User({ username, email, password: trimmedPassword });
+        
+        const newUser = new User({ 
+            username, 
+            email, 
+            password: password.trim() 
+        });
 
         await newUser.save();
-        res.redirect("/auth/login");
+
+        // Automatically log in the user after signup
+        const token = jwt.sign(
+            { userId: newUser._id },
+            process.env.JWT_SECRET,
+            { expiresIn: "1h" }
+        );
+        
+        res.cookie("token", token, { httpOnly: true });
+        res.redirect("/tasks"); // 👈 Direct to tasks page
+
     } catch (error) {
         res.render("signup", { error: "An error occurred while creating your account." });
     }
