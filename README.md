@@ -4,6 +4,9 @@ A secure and user-friendly Task Manager web application built with Node.js, Expr
 ## Overview
 This full-stack application is designed to help users organize their daily tasks. It includes authentication, session handling, and a clean, dynamic interface using EJS templating. Every user has their own task dashboard and secure access to their task list.
 
+## Live Demo
+[Task Manager](https://task-manager-sandy-ten-95.vercel.app/)
+
 ## Features
 ### User Authentication
 Secure login and registration using JWT tokens stored in cookies.
